@@ -1,0 +1,49 @@
+<div class="modal" id="sidebar" tabindex="-1" role="dialog" aria-labelledby="sidebar" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h3 class="modal-title">About {{vm.about.data.display_name}}</h3>
+            </div>
+            <div class="modal-body">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <span class="panel-title">{{vm.about.data.title}}</span>
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                            Active users: {{vm.about.data.accounts_active}}<br>
+                            Subscribers: {{vm.about.data.subscribers}}<br>
+                            Created {{vm.about.data.created_utc | ago}}<br>
+                            <br>
+                            {{vm.about.data.header_title}}
+                            <img class="thumbnail" ng-src="{{vm.about.data.header_img}}" />
+                        </p>
+                    </div>
+                </div>
+                <div class="panel panel-primary" ng-show="vm.about.data.public_description_html">
+                    <div class="panel-heading">
+                        <span class="panel-title">Public Description</span>
+                    </div>
+                    <div class="panel-body">
+                        <p ng-bind-html="vm.about.data.public_description_html | unsafe">
+
+                        </p>
+                    </div>
+                </div>
+                <div class="panel panel-primary" ng-show="vm.about.data.description_html">
+                    <div class="panel-heading">
+                        <span class="panel-title">Description</span>
+                    </div>
+                    <div class="panel-body">
+                        <p ng-bind-html="vm.about.data.description_html | unsafe">
+
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

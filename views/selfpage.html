@@ -1,0 +1,108 @@
+<div>
+    <h2>
+        <span class="label label-danger" ng-show="vm.post.data.over_18"><span title="Not safe for work">NSFW</span></span>
+        <span class="label label-success" ng-show="vm.post.data.stickied"><span class="fa fa-thumb-tack" title="Sticky"></span></span>
+        <span class="label label-warning" ng-show="vm.post.data.gilded > 0"><span class="fa fa-reddit" title="Gold"></span><span ng-show="vm.post.data.gilded > 1"> x {{vm.post.data.gilded}}</span></span>
+        <span class="label label-default" ng-show="vm.post.data.link_flair_text">{{vm.post.data.link_flair_text}}</span>
+        <a ng-href="{{vm.post.data.is_self ? '#r/' + vm.post.data.subreddit + '/comments/' + vm.post.data.id : vm.post.data.url}}">{{vm.post.data.title | unsafe}}</a>
+    </h2>
+    <div class="well">
+
+        <div class="media">
+            <div class="media-left media-top text-center" style="font-size: 1.5em">
+                <button class="vote" onclick="toggleVote(this, 1)"><span class="fa fa-caret-up"></span></button><br>
+                {{vm.post.data.score}}<br>
+                <button class="vote" onclick="toggleVote(this, 0)"><span class="fa fa-caret-down"></span></button>
+            </div>
+            <div class="media-body">
+
+                <p ng-show="vm.post.data.is_self" ng-bind-html="vm.post.data.selftext_html | unsafe"></p>
+                <p ng-hide="vm.post.data.is_self">
+                    <a ng-href="{{vm.post.data.url}}">
+                        <img ng-src="{{vm.post.data.thumbnail}}" class="img-responsive" />
+                        {{vm.post.data.domain}}
+                    </a>
+                </p>
+
+                <hr/>
+
+                <span class="no-wrap">
+                    <span ng-hide="vm.post.data.distinguished" class="fa fa-user"></span>
+                    <span ng-show="vm.post.data.distinguished" class="fa fa-legal" title="{{vm.post.data.distinguished}}"></span>
+                    <a ng-href="#u/{{vm.post.data.author}}" ng-hide="vm.post.data.author=='[deleted]'">{{vm.post.data.author}}</a>
+                    <span ng-show="vm.post.data.author=='[deleted]'">{{vm.post.data.author}}</span>
+                    <span class="label label-default" ng-show="vm.post.data.author_flair_text">{{vm.post.data.author_flair_text}}</span>
+                </span>
+                <span class="no-wrap">
+                    <span class="fa fa-clock-o"></span> {{vm.post.data.created_utc | ago}}
+                </span>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr />
+
+<div>
+    <ul class="list-group">
+        <li class="list-group-item" ng-repeat="comment in vm.comments"
+            ng-include="'comment_renderer'">
+
+        </li>
+    </ul>
+</div>
+
+<script type="text/ng-template" id="comment_renderer">
+    <div>
+        <div id="{{comment.data.id}}" ng-show="comment.kind.isComment()">
+            <div ng-class="{'selected-comment':vm.commentId==comment.data.id}">
+                <div class="media">
+                    <div class="media-left media-top text-center">
+                        <button class="vote" onclick="toggleVote(this, 1)"><span class="fa fa-caret-up"></span></button><br>
+                        {{comment.data.score}}<br>
+                        <button class="vote" onclick="toggleVote(this, 0)"><span class="fa fa-caret-down"></span></button>
+                    </div>
+                    <div class="media-body">
+                        <p ng-bind-html="comment.data.body_html | unsafe"></p>
+
+                        <p>
+                            <span class="no-wrap">
+                                <span ng-hide="comment.data.distinguished" class="fa fa-user"></span>
+                                <span ng-show="comment.data.distinguished" class="fa fa-legal" title="{{comment.data.distinguished}}"></span>
+                                <span class="author" ng-show="comment.data.author==vm.post.data.author" title="Original Poster"></span>
+                                <a ng-href="#u/{{comment.data.author}}" ng-hide="comment.data.author=='[deleted]'">{{comment.data.author}}</a>
+                                <span ng-show="comment.data.author=='[deleted]'">{{comment.data.author}}</span>
+                                <span class="label label-default" ng-show="comment.data.author_flair_text">{{comment.data.author_flair_text}}</span>
+                            </span>
+                            <span class="no-wrap">
+                                <span class="fa fa-clock-o"></span> {{comment.data.created_utc | ago}}
+                            </span>
+                            <span ng-show="pageParameters.comment == comment.data.id">
+                                <span class="no-wrap">
+                                    <span class="fa fa-sitemap"></span>
+                                    <a ng-href="#r/{{comment.data.subreddit}}/{{comment.data.link_id}}&amp;comment={{comment.data.parent_id}}&amp;hash={{comment.data.id}}">context</a>
+                                </span>
+                            </span>
+                            <span class="label label-warning" ng-show="comment.data.gilded > 0">
+                                <span class="fa fa-reddit" title="Gold"></span><span ng-show="comment.data.gilded > 1"> x {{comment.data.gilded}}</span>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="list-group">
+                <li class="list-group-item" ng-repeat="comment in comment.data.replies.data.children"
+                    ng-include="'comment_renderer'">
+
+                </li>
+            </ul>
+        </div>
+
+        <div ng-hide="comment.kind.isComment()">
+            <span ng-show="comment.loading" class="fa fa-spin fa-circle-o-notch"></span>
+            <a ng-click="vm.loadMoreComments(comment)">Load {{comment.data.count}} more comments...</a>
+        </div>
+    </div>
+</script>

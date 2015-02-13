@@ -1,0 +1,93 @@
+<div>
+    <div class="well" ng-repeat="post in vm.posts">
+
+        <div class="media">
+            <div class="media-left media-middle text-center" style="font-size: 1.5em">
+                <button class="vote" onclick="toggleVote(this, 1)"><span class="fa fa-caret-up"></span></button><br>
+                {{post.data.score}}<br>
+                <button class="vote" onclick="toggleVote(this, 0)"><span class="fa fa-caret-down"></span></button>
+            </div>
+            <div class="media-body">
+
+                <div ng-hide="post.kind.isComment()">
+                    <h3>
+                        <span class="label label-danger" ng-show="post.data.over_18"><span title="Not safe for work">NSFW</span></span>
+                        <span class="label label-success" ng-show="post.data.stickied"><span class="fa fa-thumb-tack" title="Sticky"></span></span>
+                        <span class="label label-warning" ng-show="post.data.gilded > 0"><span class="fa fa-reddit" title="Gold"></span><span ng-show="post.data.gilded > 1"> x {{post.data.gilded}}</span></span>
+                        <span class="label label-default" ng-show="post.data.link_flair_text">{{post.data.link_flair_text}}</span>
+
+                        <a ng-href="{{post.data.is_self ? '#r/' + post.data.subreddit + '/comments/' + post.data.id : post.data.url}}">{{post.data.title | unsafe}}</a>
+                        <small>({{post.data.domain}})</small>
+                    </h3>
+                    <p>
+                        <span class="no-wrap">
+                            <span ng-hide="post.data.distinguished" class="fa fa-user"></span>
+                            <span ng-show="post.data.distinguished" class="fa fa-legal" title="{{post.data.distinguished}}"></span>
+                            <a ng-href="#u/{{post.data.author}}" ng-hide="post.data.author=='[deleted]'">{{post.data.author}}</a>
+                            <span ng-show="post.data.author=='[deleted]'">{{post.data.author}}</span>
+                            <span class="label label-default" ng-show="post.data.author_flair_text">{{post.data.author_flair_text}}</span>
+                        </span>
+                        <span class="no-wrap">
+                            <span class="fa fa-clock-o"></span> {{post.data.created_utc | ago}}
+                        </span>
+                        <span ng-hide="vm.about.kind.isSubreddit()">
+                            <span class="no-wrap">
+                                <span class="fa fa-bars"></span> <a ng-href="#r/{{post.data.subreddit}}">/r/{{post.data.subreddit}}</a>
+                            </span>
+                        </span>
+                        <span class="no-wrap">
+                            <span class="fa fa-comments"></span>
+                            <a ng-href="#r/{{post.data.subreddit}}/comments/{{post.data.id}}">comments
+                                <span class="badge">{{post.data.num_comments}}</span>
+                            </a>
+                        </span>
+                    </p>
+                </div>
+
+                <div ng-show="post.kind.isComment()">
+                    <p ng-bind-html="post.data.body_html | unsafe"></p>
+
+                    <p>
+                        <span class="no-wrap">
+                            <span ng-hide="post.data.distinguished" class="fa fa-user"></span>
+                            <span ng-show="post.data.distinguished" class="fa fa-legal" title="{{post.data.distinguished}}"></span>
+                            <span class="author" ng-show="post.data.author==post.data.link_author" title="Original Poster"></span>
+                            <a ng-href="#u/{{post.data.author}}" ng-hide="post.data.author=='[deleted]'">{{post.data.author}}</a>
+                            <span ng-show="post.data.author=='[deleted]'">{{post.data.author}}</span>
+                            <span class="label label-default" ng-show="post.data.author_flair_text">{{post.data.author_flair_text}}</span>
+                        </span>
+                        <span class="no-wrap">
+                            <span class="fa fa-clock-o"></span> {{post.data.created_utc | ago}}
+                        </span>
+                        <span class="no-wrap">
+                            <span class="fa fa-bars"></span> <a ng-href="#r/{{post.data.subreddit}}">/r/{{post.data.subreddit}}</a>
+                        </span>
+                        <span class="no-wrap">
+                            <span class="fa fa-sitemap"></span>
+                            <a ng-href="#r/{{post.data.subreddit}}/comments/{{post.data.link_id}}?parent={{post.data.parent_id}}&amp;comment={{post.data.id}}">context</a>
+                        </span>
+                        <span class="no-wrap">
+                            <span class="fa fa-chain"></span>
+                            <a ng-href="#r/{{post.data.subreddit}}/comments/{{post.data.link_id}}">original post</a>
+                        </span>
+                        <span class="label label-warning" ng-show="post.data.gilded > 0">
+                            <span class="fa fa-reddit" title="Gold"></span><span ng-show="post.data.gilded > 1"> x {{post.data.gilded}}</span>
+                        </span>
+                    </p>
+                </div>
+
+            </div>
+            <!--<div class="media-right media-middle">
+                <img ng-hide="post.data.over_18 || post.data.is_self" class="thumbnail-img" ng-src="{{post.data.thumbnail}}" />
+            </div>-->
+        </div>
+
+    </div>
+</div>
+
+<nav ng-hide="vm.isMobile">
+    <ul class="pager">
+        <li class="previous"><a ng-show="vm.before" ng-click="vm.prev()"><span>&larr;</span> Prev</a></li>
+        <li class="next"><a ng-show="vm.after" ng-click="vm.next()">Next <span>&rarr;</span></a></li>
+    </ul>
+</nav>

@@ -1,0 +1,79 @@
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <a class="navbar-brand" href="#/">
+                <img alt="Reddit" src="images/snoo_head.jpg">
+            </a>
+
+            <a class="navbar-brand" ng-href="#{{vm.thing.type.toKey()}}/{{vm.thing.name}}">/{{vm.thing.type.toKey()}}/{{vm.thing.name}}</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+            <div class="navbar-right">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" ng-model="vm.search.query" placeholder="/{{vm.search.type.toKey()}}/...">
+                        <div class="input-group-btn">
+                            <a ng-href="#{{vm.search.type.toKey()}}/{{vm.search.query}}" class="btn btn-default">Go to {{vm.search.type.toDisplay()}}</a>
+                            <a class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a ng-click="vm.search.changeType(vm.ThingTypes.subreddit)">Subreddit</a></li>
+                                <li><a ng-click="vm.search.changeType(vm.ThingTypes.account)">User</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <ul class="nav navbar-nav" ng-show="vm.thing.type.isSubreddit()">
+                <li ng-show="vm.about">
+                    <a type="button" data-toggle="modal" data-target="#sidebar">
+                        <span class="fa fa-info-circle"></span>
+                    </a>
+                </li>
+                <li ng-class="{active: vm.isActive()}"><a ng-href="#r/{{vm.thing.name}}">Hot</a></li>
+                <li ng-class="{active: vm.isActive('new')}"><a ng-href="#r/{{vm.thing.name}}/new">New</a></li>
+                <li ng-class="{active: vm.isActive('top')}" class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Top<span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a ng-href="#r/{{vm.thing.name}}/top?t=hour">This hour</a></li>
+                        <li><a ng-href="#r/{{vm.thing.name}}/top?t=day">Today</a></li>
+                        <li><a ng-href="#r/{{vm.thing.name}}/top?t=week">This week</a></li>
+                        <li><a ng-href="#r/{{vm.thing.name}}/top?t=month">This month</a></li>
+                        <li><a ng-href="#r/{{vm.thing.name}}/top?t=year">This year</a></li>
+                        <li class="divider"></li>
+                        <li><a ng-href="#r/{{vm.thing.name}}/top?t=all">All time</a></li>
+                    </ul>
+                </li>
+                <li ng-class="{active: vm.isActive('controversial')}" class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Controversial<span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a ng-href="#r/{{vm.thing.name}}/controversial?t=hour">This hour</a></li>
+                        <li><a ng-href="#r/{{vm.thing.name}}/controversial?t=day">Today</a></li>
+                        <li><a ng-href="#r/{{vm.thing.name}}/controversial?t=week">This week</a></li>
+                        <li><a ng-href="#r/{{vm.thing.name}}/controversial?t=month">This month</a></li>
+                        <li><a ng-href="#r/{{vm.thing.name}}/controversial?t=year">This year</a></li>
+                        <li class="divider"></li>
+                        <li><a ng-href="#r/{{vm.thing.name}}/controversial?t=all">All time</a></li>
+                    </ul>
+                </li>
+                <li ng-class="{active: vm.isActive('rising')}"><a ng-href="#r/{{vm.thing.name}}/rising">Rising</a></li>
+                <li ng-class="{active: vm.isActive('gilded')}"><a ng-href="#r/{{vm.thing.name}}/gilded">Gilded</a></li>
+            </ul>
+            <ul class="nav navbar-nav" ng-hide="vm.thing.type.isSubreddit()">
+                <li ng-class="{active: vm.isActive()}"><a ng-href="#u/{{vm.thing.name}}">Overview <span class="sr-only">(current)</span></a></li>
+                <li ng-class="{active: vm.isActive('comments')}"><a ng-href="#u/{{vm.thing.name}}/comments">Comments</a></li>
+                <li ng-class="{active: vm.isActive('submitted')}"><a ng-href="#u/{{vm.thing.name}}/submitted">Submitted</a></li>
+            </ul>
+        </div>
+        
+    </div>
+</nav>
